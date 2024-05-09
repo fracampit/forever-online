@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-    <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
-    <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
-        <security>
-            <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
-                <requestedExecutionLevel level="requireAdministrator" uiAccess="false"/>
-            </requestedPrivileges>
-        </security>
-    </trustInfo>
+    <assemblyIdentity version="1.0.0.0" name="ForeverOnline"/>
+    <application xmlns="urn:schemas-microsoft-com:asm.v3">
+        <windowsSettings xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">
+            <ms_compatibilityId xmlns="http://schemas.microsoft.com/SMI/2011/WindowsSettings">Windows8</ms_compatibilityId>
+        </windowsSettings>
+    </application>
 </assembly>
