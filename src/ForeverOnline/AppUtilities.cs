@@ -44,8 +44,14 @@ public static class AppUtilities
     static extern IntPtr GetConsoleWindow();
 
     [DllImport("user32.dll", SetLastError = true)]
-    static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-    
+    static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+    [DllImport("user32.dll")]
+    static extern int GetSystemMetrics(int nIndex);
+
+    const int SM_CXSCREEN = 0;
+    const int SM_CYSCREEN = 1;
+
     public static void InitializeWindow()
     {
         var handle = GetConsoleWindow();
@@ -55,47 +61,15 @@ public static class AppUtilities
             return;
         }
 
-        var success = SetWindowPos(handle, IntPtr.Zero, 0, 0, 0, 0, 0x0004 | 0x0001);
+        var screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        var screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+        var success = MoveWindow(handle, 0, 0, screenWidth / 2, screenHeight, true);
         if (!success)
         {
             Console.WriteLine("Error: Unable to set window position and size.");
             return;
         }
-
-        var brandLines = AsciiArtCollection.Brand.Split('\n').Length;
-        var logoLines = AsciiArtCollection.Logo.Split('\n').Length;
-        const int settingsLines = 5;
-
-        var totalLines = brandLines + logoLines + settingsLines;
-
-        // add a few extra lines for buffer
-        totalLines += 10;
-
-        try
-        {
-            if (totalLines > Console.BufferHeight)
-            {
-                Console.BufferHeight = totalLines; // Try to increase the buffer height
-                Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds buffer height. Buffer height has been increased to {totalLines}.");
-            }
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            try
-            {
-                // If the desired buffer height is too large, try to set it to the maximum allowed value
-                Console.BufferHeight = short.MaxValue - 1;
-                Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds maximum buffer height. Buffer height has been set to maximum allowed value.");
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // If the maximum allowed value is also too large, set the buffer height to a default value
-                Console.BufferHeight = 30; // Or any other value less than the maximum allowed value on your system
-                Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds maximum buffer height. Buffer height has been set to default value.");
-            }
-        }
-
-        Console.WindowHeight = Math.Min(totalLines, Console.BufferHeight);
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine(AsciiArtCollection.Brand);
