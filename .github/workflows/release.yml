@@ -23,14 +23,21 @@ jobs:
         dotnet publish src/ForeverOnline/ForeverOnline.csproj --configuration Release --output ./publish/ForeverOnline /p:PublishProfile=SingleFile
         dotnet publish src/ForeverOnline.Launcher/ForeverOnline.Launcher.csproj --configuration Release --output ./publish/ForeverOnline.Launcher /p:PublishProfile=SingleFile
 
-    - name: Zip files
+    - name: Prepare files
       run: |
         mkdir -p publish/ForeverOnline/app
         find publish/ForeverOnline -maxdepth 1 -type f -exec mv {} publish/ForeverOnline/app \;
         mv publish/ForeverOnline.Launcher/* publish/ForeverOnline
         find publish/ForeverOnline -name "*.pdb" -type f -delete
-        zip -r ForeverOnline.zip publish/ForeverOnline
-
+  
+    - name: Zip app files
+      run: |
+        zip -r ForeverOnlineApp.zip publish/ForeverOnline/app
+  
+    - name: Rename launcher exe
+      run: |
+        mv publish/ForeverOnline/ForeverOnline.Launcher.exe ForeverOnlineLauncher.exe
+  
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -41,14 +48,25 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-
-    - name: Upload Release Asset
-      id: upload-release-asset
+  
+    - name: Upload App Release Asset
+      id: upload-app-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./ForeverOnline.zip
-        asset_name: ForeverOnline.zip
+        asset_path: ./ForeverOnlineApp.zip
+        asset_name: ForeverOnlineApp.zip
         asset_content_type: application/zip
+  
+    - name: Upload Launcher Release Asset
+      id: upload-launcher-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./ForeverOnlineLauncher.exe
+        asset_name: ForeverOnlineLauncher.exe
+        asset_content_type: application/vnd.microsoft.portable-executable
