@@ -85,6 +85,10 @@ void ExtractZipFile(string zipFilePath, string outputDirectory)
     Console.WriteLine($"Extracting {zipFilePath} to {outputDirectory}...");
     ZipFile.ExtractToDirectory(zipFilePath, outputDirectory);
     Console.WriteLine($"Extracted {zipFilePath} to {outputDirectory}");
+    // delete the zip file after extraction
+    Console.WriteLine($"Deleting {zipFilePath}...");
+    File.Delete(zipFilePath);
+    Console.WriteLine($"Deleted {zipFilePath}");
 }
 
 // method to clean up the folder
