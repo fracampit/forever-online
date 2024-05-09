@@ -28,6 +28,7 @@ jobs:
         mkdir -p publish/ForeverOnline/app
         find publish/ForeverOnline -maxdepth 1 -type f -exec mv {} publish/ForeverOnline/app \;
         mv publish/ForeverOnline.Launcher/* publish/ForeverOnline
+        find publish/ForeverOnline -name "*.pdb" -type f -delete
         zip -r ForeverOnline.zip publish/ForeverOnline
 
     - name: Create Release
