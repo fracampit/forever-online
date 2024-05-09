@@ -31,7 +31,8 @@ jobs:
 
     - name: Zip files
       run: |
-        mkdir publish/ForeverOnline/bin
+        mkdir -p publish/ForeverOnline/bin
+        rm -rf publish/ForeverOnline/bin/*
         mv publish/ForeverOnline/* publish/ForeverOnline/bin
         mv publish/ForeverOnline.Launcher/* publish/ForeverOnline
         zip -r ForeverOnline.zip publish/ForeverOnline
