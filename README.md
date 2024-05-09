@@ -1,6 +1,8 @@
 ﻿# Running the Application
 
-The application is distributed as an executable. Here are the steps to run it:
+The application is distributed as an installer/launcher, which checks for newer versions of the app and downloads them automatically.
+
+Here is how to run the application:
 
 1. Download the `ForeverOnlineLauncer.exe` from [the latest release](https://github.com/fracampit/forever-online/releases/latest).
 2. Move the executable to the desired location. This location will be used to install the application.
