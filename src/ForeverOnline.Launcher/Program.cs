@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -62,31 +63,73 @@ async Task DownloadLatestRelease(string assetsUrl)
     var content = await response.Content.ReadAsStringAsync();
     var assets = JsonSerializer.Deserialize<Asset[]>(content);
     if (assets == null) throw new WebException($"Failed to get assets: {response.ReasonPhrase}");
-    var exeAsset = assets.First(a => a.name.EndsWith(".exe"));
-    var jsonAsset = assets.First(a => a.name.EndsWith("appsettings.json"));
+    var asset = assets.Single();
 
-    await DownloadFile(exeAsset.browser_download_url, Path.Combine(appPath, exeAsset.name));
-    await DownloadFile(jsonAsset.browser_download_url, Path.Combine(appPath, jsonAsset.name));
+    CleanUpFolder(appPath);
+    await DownloadFile(asset.browser_download_url, Path.Combine(appPath, asset.name));
+    ExtractZipFile(Path.Combine(appPath, asset.name), appPath);
 }
 
 async Task DownloadFile(string url, string outputPath)
 {
+    Console.WriteLine($"Downloading {url}...");
     var response = await client.GetAsync(url);
     response.EnsureSuccessStatusCode();
     await using var outputFileStream = File.Create(outputPath);
     await response.Content.CopyToAsync(outputFileStream);
+    Console.WriteLine($"Downloaded {url} to {outputPath}");
+}
+
+void ExtractZipFile(string zipFilePath, string outputDirectory)
+{
+    Console.WriteLine($"Extracting {zipFilePath} to {outputDirectory}...");
+    ZipFile.ExtractToDirectory(zipFilePath, outputDirectory);
+    Console.WriteLine($"Extracted {zipFilePath} to {outputDirectory}");
+}
+
+// method to clean up the folder
+void CleanUpFolder(string folderPath)
+{
+    if (Directory.Exists(folderPath))
+    {
+        Console.WriteLine($"Cleaning up {folderPath}...");
+        var files = Directory.GetFiles(folderPath);
+        
+        foreach (var file in files)
+        {
+            Console.WriteLine($"Deleting {file}...");
+            File.Delete(file);
+            Console.WriteLine($"Deleted {file}");
+        }
+        
+        var directories = Directory.GetDirectories(folderPath);
+        
+        foreach (var directory in directories)
+        {
+            Console.WriteLine($"Deleting {directory}...");
+            Directory.Delete(directory, true);
+            Console.WriteLine($"Deleted {directory}");
+        }
+    }
+    else
+    {
+        Console.WriteLine($"Directory {folderPath} does not exist.");
+    }
 }
 
 void RunApp()
 {
+    var filePath = Path.Combine(appPath, @"publish\ForeverOnline\app");
+    
     var process = new Process
     {
         StartInfo = new ProcessStartInfo
         {
-            FileName = Path.Combine(appPath, "ForeverOnline.exe"),
-            Arguments = $"\"{appPath}\"",
+            FileName = Path.Combine(filePath, "ForeverOnline.exe"),
+            Arguments = $"\"{filePath}\"",
             UseShellExecute = true
         }
     };
+    Console.WriteLine($"Starting {process.StartInfo.FileName}...");
     process.Start();
 }
