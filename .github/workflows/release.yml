@@ -26,8 +26,8 @@ jobs:
 
     - name: Publish
       run: |
-        dotnet publish src/ForeverOnline/ForeverOnline.csproj --configuration Release --no-build --output ./publish/ForeverOnline /p:PublishProfile=SingleFile.xml
-        dotnet publish src/ForeverOnline.Launcher/ForeverOnline.Launcher.csproj --configuration Release --no-build --output ./publish/ForeverOnline.Launcher /p:PublishProfile=SingleFile.xml
+        dotnet publish src/ForeverOnline/ForeverOnline.csproj --configuration Release --no-build --output ./publish/ForeverOnline /p:PublishProfile=SingleFile
+        dotnet publish src/ForeverOnline.Launcher/ForeverOnline.Launcher.csproj --configuration Release --no-build --output ./publish/ForeverOnline.Launcher /p:PublishProfile=SingleFile
 
     - name: Zip files
       run: |
