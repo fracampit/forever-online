@@ -140,7 +140,8 @@ void RunApp()
         {
             FileName = Path.Combine(appPath, "ForeverOnline.exe"),
             Arguments = $"\"{appPath}\"",
-            UseShellExecute = true
+            UseShellExecute = true,
+            Verb = "runas"
         }
     };
     Console.WriteLine($"Starting {process.StartInfo.FileName}...");
