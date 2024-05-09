@@ -8,8 +8,9 @@ using ForeverOnline.Launcher.Models;
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add("User-Agent", "request");
 
-var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-if (currentPath == null) throw new DirectoryNotFoundException("Failed to get current path.");
+var location = Assembly.GetExecutingAssembly().Location;
+var currentPath = Path.GetDirectoryName(location);
+if (currentPath == null) throw new DirectoryNotFoundException($"Failed to get current path. (location: {location})");
 var appPath = Path.Combine(currentPath, "ForeverOnline");
 
 var latestRelease = await GetLatestRelease();
