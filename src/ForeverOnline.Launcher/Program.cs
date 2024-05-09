@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
-using System.Reflection;
 using System.Text.Json;
 using ForeverOnline.Launcher.Models;
 
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add("User-Agent", "request");
 
-var location = Assembly.GetExecutingAssembly().Location;
+var location = AppContext.BaseDirectory;
 var currentPath = Path.GetDirectoryName(location);
 if (currentPath == null) throw new DirectoryNotFoundException($"Failed to get current path. (location: {location})");
 var appPath = Path.Combine(currentPath, "ForeverOnline");
