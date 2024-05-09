@@ -28,20 +28,37 @@ while (!Directory.Exists(appPath))
 var latestRelease = await GetLatestRelease();
 var currentVersion = GetCurrentVersion();
 
-if (latestRelease.tag_name != currentVersion)
+if (!IsLatestVersion(latestRelease.tag_name, currentVersion))
 {
-    Console.WriteLine("Current version: " + currentVersion);
-    Console.WriteLine("Latest version: " + latestRelease.tag_name);
-    Console.WriteLine("New version available. Updating...");
     await DownloadLatestRelease(latestRelease.assets_url);
-}
-else
-{
-    Console.WriteLine("No new version available. Running app...");
 }
 
 RunApp();
 return;
+
+bool IsLatestVersion(string latest, string current)
+{
+    if (latest.StartsWith('v'))
+    {
+        latest = latest[1..];
+    }
+
+    if (current.EndsWith(".0"))
+    {
+        current = current[..^2];
+    }
+
+    if (latest != current)
+    {
+        Console.WriteLine("Current version: " + current);
+        Console.WriteLine("Latest version: " + latest);
+        Console.WriteLine("New version available. Updating...");
+        return false;
+    }
+
+    Console.WriteLine("No new version available. Running app...");
+    return true;
+}
 
 async Task<Release> GetLatestRelease()
 {
