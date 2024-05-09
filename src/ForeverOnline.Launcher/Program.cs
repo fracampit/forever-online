@@ -30,6 +30,8 @@ var currentVersion = GetCurrentVersion();
 
 if (latestRelease.tag_name != currentVersion)
 {
+    Console.WriteLine("Current version: " + currentVersion);
+    Console.WriteLine("Latest version: " + latestRelease.tag_name);
     Console.WriteLine("New version available. Updating...");
     await DownloadLatestRelease(latestRelease.assets_url);
 }
