@@ -32,10 +32,11 @@ jobs:
         find publish/ForeverOnline -maxdepth 1 -type f -exec mv {} publish/ForeverOnline/app \;
         mv publish/ForeverOnline.Launcher/* publish/ForeverOnline
         find publish/ForeverOnline -name "*.pdb" -type f -delete
-  
+
     - name: Zip app files
       run: |
-        zip -r ForeverOnlineApp.zip publish/ForeverOnline/app
+        cd publish/ForeverOnline/app
+        zip -r ../../ForeverOnlineApp.zip .
   
     - name: Rename launcher exe
       run: |
