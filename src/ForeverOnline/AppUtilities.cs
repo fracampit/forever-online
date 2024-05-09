@@ -64,6 +64,7 @@ public static class AppUtilities
     
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine(AsciiArtCollection.Brand);
+        Console.WriteLine($"Version: {typeof(AppUtilities).Assembly.GetName().Version}");
         Console.ResetColor();
 
         Console.ForegroundColor = ConsoleColor.Cyan;
