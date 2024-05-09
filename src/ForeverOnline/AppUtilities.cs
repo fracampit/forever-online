@@ -31,9 +31,8 @@ public static class AppUtilities
         if (!KeyboardSimulator.IsNotepadFocused())
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Notepad is still not focused.");
+            Console.WriteLine("Notepad is still not focused. Will press the key anyways.");
             Console.ResetColor();
-            return;
         }
 
         var randomKeySelector = new VirtualKeyCodeSelector(new Random());
