@@ -71,13 +71,31 @@ public static class AppUtilities
         // add a few extra lines for buffer
         totalLines += 10;
 
-        if (totalLines > Console.BufferHeight)
+        try
         {
-            Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds buffer height ({Console.BufferHeight}).");
-            totalLines = Console.BufferHeight;
+            if (totalLines > Console.BufferHeight)
+            {
+                Console.BufferHeight = totalLines; // Try to increase the buffer height
+                Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds buffer height. Buffer height has been increased to {totalLines}.");
+            }
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            try
+            {
+                // If the desired buffer height is too large, try to set it to the maximum allowed value
+                Console.BufferHeight = short.MaxValue - 1;
+                Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds maximum buffer height. Buffer height has been set to maximum allowed value.");
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // If the maximum allowed value is also too large, set the buffer height to a default value
+                Console.BufferHeight = 30; // Or any other value less than the maximum allowed value on your system
+                Console.WriteLine($"Warning: Desired window height ({totalLines}) exceeds maximum buffer height. Buffer height has been set to default value.");
+            }
         }
 
-        Console.WindowHeight = totalLines;
+        Console.WindowHeight = Math.Min(totalLines, Console.BufferHeight);
 
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine(AsciiArtCollection.Brand);
