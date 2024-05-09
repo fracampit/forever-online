@@ -42,9 +42,14 @@ public static class AppUtilities
     
     [DllImport("kernel32.dll", SetLastError = true)]
     static extern IntPtr GetConsoleWindow();
+    
+    [DllImport("user32.dll")]
+    static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     [DllImport("user32.dll", SetLastError = true)]
     static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+    const int SW_MAXIMIZE = 3;
 
     [DllImport("user32.dll")]
     static extern int GetSystemMetrics(int nIndex);
@@ -60,6 +65,8 @@ public static class AppUtilities
             Console.WriteLine("Error: Unable to get console window handle.");
             return;
         }
+
+        ShowWindow(handle, SW_MAXIMIZE);
 
         var screenWidth = GetSystemMetrics(SM_CXSCREEN);
         var screenHeight = GetSystemMetrics(SM_CYSCREEN);
