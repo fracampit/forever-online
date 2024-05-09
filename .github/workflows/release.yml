@@ -36,7 +36,7 @@ jobs:
     - name: Zip app files
       run: |
         cd publish/ForeverOnline/app
-        zip -r ../../ForeverOnlineApp.zip .
+        zip -r ../../../ForeverOnlineApp.zip .
   
     - name: Rename launcher exe
       run: |
