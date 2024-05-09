@@ -2,31 +2,34 @@
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using ForeverOnline.Launcher.Models;
 
-Console.WriteLine("Enter the token for accessing GitHub:");
-var token = Console.ReadLine();
-while (token?.Length != 40)
-{
-    Console.WriteLine("Invalid token. Enter the token for accessing GitHub:");
-    token = Console.ReadLine();
-}
+const string token = "Z2hwX2tBTkduRm5nbFBBeGFTV0w4TW9WN3BwREhMWTdRVjBuN0pSUg==";
 
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add("User-Agent", "request");
-client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", token);
+client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+    "Token", 
+    Encoding.UTF8.GetString(Convert.FromBase64String(token)));
 
-Console.WriteLine("Enter the path for downloading the latest release and installing it:");
-var appPath = Console.ReadLine();
-while (!Directory.Exists(appPath))
-{
-    Console.WriteLine("Invalid path. Enter the path for downloading the latest release and installing it:");
-    appPath = Console.ReadLine();
-}
+var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+if (currentPath == null) throw new DirectoryNotFoundException("Failed to get current path.");
+var appPath = Path.Combine(currentPath, "app");
 
 var latestRelease = await GetLatestRelease();
-var currentVersion = GetCurrentVersion();
+string currentVersion;
+try
+{
+    currentVersion = GetCurrentVersion();
+}
+catch (Exception e)
+{
+    Console.WriteLine(e);
+    currentVersion = "0.0.0";
+}
 
 if (!IsLatestVersion(latestRelease.tag_name, currentVersion))
 {
@@ -130,7 +133,9 @@ void CleanUpFolder(string folderPath)
     }
     else
     {
-        Console.WriteLine($"Directory {folderPath} does not exist.");
+        Console.WriteLine($"Directory {folderPath} does not exist. Creating...");
+        Directory.CreateDirectory(folderPath);
+        Console.WriteLine($"Created {folderPath}");
     }
 }
 
