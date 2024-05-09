@@ -1,93 +1,39 @@
-﻿using System.Runtime.InteropServices;
-using System.Text.Json;
+﻿using System.Text.Json;
 using ForeverOnline;
 
-InitializeWindow();
-
-var config = JsonDocument.Parse(File.ReadAllText("appsettings.json")).RootElement;
-var randomKeySelector = new VirtualKeyCodeSelector(new Random());
-var delay = config.GetProperty("Delay").GetInt32();
-var moveMouse = config.GetProperty("MoveMouse").GetBoolean();
-
-PrintSettings();
-
-Console.WriteLine();
-Console.WriteLine("Opening Notepad...");
-KeyboardSimulator.FocusOrLaunchNotepad();
-Console.WriteLine("Pressing keys...");
-Console.WriteLine();
-
-if (moveMouse) new Thread(RandomMouseMover.MoveMouseRandomly).Start();
-
-while (true)
+try
 {
-    AttemptToFocusOrLaunchNotepad();
-    PerformKeyPressInNotepad();
-    Thread.Sleep(delay);
-}
+    AppUtilities.InitializeWindow();
 
-void AttemptToFocusOrLaunchNotepad()
-{
-    if (KeyboardSimulator.IsNotepadFocused()) return;
+    var appPath = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
 
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.WriteLine("Notepad is not focused or not open. Attempting to focus or launch...");
+    var configPath = Path.Combine(appPath, "appsettings.json");
+    var config = JsonDocument.Parse(File.ReadAllText(configPath)).RootElement;
+    var delay = config.GetProperty("Delay").GetInt32();
+    var moveMouse = config.GetProperty("MoveMouse").GetBoolean();
+
+    AppUtilities.PrintSettings(delay, moveMouse);
+
+    Console.WriteLine();
+    Console.WriteLine("Opening Notepad...");
     KeyboardSimulator.FocusOrLaunchNotepad();
-    Console.ResetColor();
-    Thread.Sleep(3000); // Wait a bit for Notepad to open or gain focus
-}
+    Console.WriteLine("Pressing keys...");
+    Console.WriteLine();
 
-void PerformKeyPressInNotepad()
-{
-    if (!KeyboardSimulator.IsNotepadFocused())
+    if (moveMouse) new Thread(RandomMouseMover.MoveMouseRandomly).Start();
+
+    while (true)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("Notepad is still not focused.");
-        Console.ResetColor();
-        return;
+        AppUtilities.AttemptToFocusOrLaunchNotepad();
+        AppUtilities.PerformKeyPressInNotepad();
+        Thread.Sleep(delay);
     }
-
-    KeyboardSimulator.PressKey((byte)randomKeySelector.SelectRandomLetterKey());
 }
-
-[DllImport("kernel32.dll", SetLastError = true)]
-static extern IntPtr GetConsoleWindow();
-
-[DllImport("user32.dll", SetLastError = true)]
-static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-void InitializeWindow()
+catch (Exception ex)
 {
-    var handle = GetConsoleWindow();
-    SetWindowPos(handle, IntPtr.Zero, 0, 0, 0, 0, 0x0004 | 0x0001);
-
-    var brandLines = AsciiArtCollection.Brand.Split('\n').Length;
-    var logoLines = AsciiArtCollection.Logo.Split('\n').Length;
-    const int settingsLines = 5;
-
-    var totalLines = brandLines + logoLines + settingsLines;
-
-    // add a few extra lines for buffer
-    totalLines += 10;
-
-    Console.WindowHeight = totalLines < Console.BufferHeight ? totalLines : Console.BufferHeight;
-    
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine(AsciiArtCollection.Brand);
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine(ex.Message);
     Console.ResetColor();
-
-    Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine(AsciiArtCollection.Logo);
-    Console.ResetColor();
-}
-
-void PrintSettings()
-{
-    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-    Console.WriteLine("-------------------------------------------------");
-    Console.WriteLine("Settings:");
-    Console.WriteLine($" - Delay: {delay} ms");
-    Console.WriteLine($" - Random mouse movement enabled: {moveMouse}");
-    Console.WriteLine("-------------------------------------------------");
-    Console.ResetColor();
+    Console.WriteLine("Press any key to exit...");
+    Console.ReadKey();
 }
