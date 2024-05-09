@@ -109,40 +109,7 @@ public static class KeyboardSimulator
         {
             Console.WriteLine($"Failed to send key up. Last Error: {Marshal.GetLastWin32Error()}");
         }
-    }
-
-    public static bool IsNotepadFocused()
-    {
-        var notepadHandle = GetNotepadHandle();
-        if (notepadHandle == IntPtr.Zero) return false;
-        var foregroundWindow = GetForegroundWindow();
-        return notepadHandle == foregroundWindow;
-    }
-
-    public static void FocusOrLaunchNotepad()
-    {
-        var notepadHandle = GetNotepadHandle();
-        if (notepadHandle != IntPtr.Zero)
-        {
-            SetForegroundWindow(notepadHandle);
-        }
-        else
-        {
-            if (Process.GetProcessesByName("notepad").Length > 0)
-            {
-                Console.WriteLine("Notepad is already running but not focused. Focussing...");
-                SetForegroundWindow(notepadHandle);
-            }
-            else Process.Start("notepad.exe");
-        }
-    }
-
-    private static IntPtr GetNotepadHandle()
-    {
-        foreach (var process in Process.GetProcessesByName("notepad"))
-        {
-            return process.MainWindowHandle; // Assumes notepad process has a main window
-        }
-        return IntPtr.Zero;
+        
+        Console.Write((char)keyCode);
     }
 }

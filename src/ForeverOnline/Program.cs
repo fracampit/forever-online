@@ -15,17 +15,11 @@ try
     AppUtilities.PrintSettings(delay, moveMouse);
 
     Console.WriteLine();
-    Console.WriteLine("Opening Notepad...");
-    KeyboardSimulator.FocusOrLaunchNotepad();
-    Console.WriteLine("Pressing keys...");
-    Console.WriteLine();
-
-    if (moveMouse) new Thread(RandomMouseMover.MoveMouseRandomly).Start();
-
+    
     while (true)
     {
-        AppUtilities.AttemptToFocusOrLaunchNotepad();
-        AppUtilities.PerformKeyPressInNotepad();
+        if (moveMouse) RandomMouseMover.MoveMouseRandomly();
+        AppUtilities.PerformKeyPress();
         Thread.Sleep(delay);
     }
 }

@@ -15,26 +15,8 @@ public static class AppUtilities
         Console.ResetColor();
     }
     
-    public static void AttemptToFocusOrLaunchNotepad()
+    public static void PerformKeyPress()
     {
-        if (KeyboardSimulator.IsNotepadFocused()) return;
-
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Notepad is not focused or not open. Attempting to focus or launch...");
-        KeyboardSimulator.FocusOrLaunchNotepad();
-        Console.ResetColor();
-        Thread.Sleep(3000); // Wait a bit for Notepad to open or gain focus
-    }
-
-    public static void PerformKeyPressInNotepad()
-    {
-        if (!KeyboardSimulator.IsNotepadFocused())
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Notepad is still not focused. Will press the key anyways.");
-            Console.ResetColor();
-        }
-
         var randomKeySelector = new VirtualKeyCodeSelector(new Random());
         KeyboardSimulator.PressKey((byte)randomKeySelector.SelectRandomLetterKey());
     }

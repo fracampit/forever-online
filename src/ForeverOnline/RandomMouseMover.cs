@@ -47,21 +47,15 @@ public class RandomMouseMover
     public static void MoveMouseRandomly()
     {
         var random = new Random();
-        while (true)
-        {
-            // Get the screen width and height using system metrics
-            var screenWidth = GetSystemMetrics(SM_CXSCREEN);
-            var screenHeight = GetSystemMetrics(SM_CYSCREEN);
+        // Get the screen width and height using system metrics
+        var screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        var screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-            // Calculate random coordinates near the center of the screen
-            var x = screenWidth / 2 + random.Next(-200, 200); // 200 pixels around the center
-            var y = screenHeight / 2 + random.Next(-200, 200); // 200 pixels around the center
+        // Calculate random coordinates near the center of the screen
+        var x = screenWidth / 2 + random.Next(-200, 200); // 200 pixels around the center
+        var y = screenHeight / 2 + random.Next(-200, 200); // 200 pixels around the center
 
-            // Smoothly move the mouse to the random coordinates
-            SmoothMoveMouse(x, y, 50, 500); // Move in 50 steps over 500 milliseconds
-
-            // Wait for a second before moving again
-            Thread.Sleep(5000);
-        }
+        // Smoothly move the mouse to the random coordinates
+        SmoothMoveMouse(x, y, 50, 500); // Move in 50 steps over 500 milliseconds
     }
 }
