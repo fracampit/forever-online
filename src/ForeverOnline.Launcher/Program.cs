@@ -63,7 +63,7 @@ async Task DownloadLatestRelease(string assetsUrl)
     var content = await response.Content.ReadAsStringAsync();
     var assets = JsonSerializer.Deserialize<Asset[]>(content);
     if (assets == null) throw new WebException($"Failed to get assets: {response.ReasonPhrase}");
-    var asset = assets.Single();
+    var asset = assets.Single(a => a.name.EndsWith(".zip"));
 
     CleanUpFolder(appPath);
     await DownloadFile(asset.browser_download_url, Path.Combine(appPath, asset.name));
