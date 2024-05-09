@@ -18,16 +18,10 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore /p:PublishReadyToRun=true
-
-    - name: Build
-      run: dotnet build --configuration Release --no-restore /p:PublishReadyToRun=true
-
     - name: Publish
       run: |
-        dotnet publish src/ForeverOnline/ForeverOnline.csproj --configuration Release --no-build --output ./publish/ForeverOnline /p:PublishProfile=SingleFile
-        dotnet publish src/ForeverOnline.Launcher/ForeverOnline.Launcher.csproj --configuration Release --no-build --output ./publish/ForeverOnline.Launcher /p:PublishProfile=SingleFile
+        dotnet publish src/ForeverOnline/ForeverOnline.csproj --configuration Release --output ./publish/ForeverOnline /p:PublishProfile=SingleFile
+        dotnet publish src/ForeverOnline.Launcher/ForeverOnline.Launcher.csproj --configuration Release --output ./publish/ForeverOnline.Launcher /p:PublishProfile=SingleFile
 
     - name: Zip files
       run: |
