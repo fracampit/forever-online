@@ -123,14 +123,12 @@ void CleanUpFolder(string folderPath)
 
 void RunApp()
 {
-    var filePath = Path.Combine(appPath, @"publish\ForeverOnline\app");
-    
     var process = new Process
     {
         StartInfo = new ProcessStartInfo
         {
-            FileName = Path.Combine(filePath, "ForeverOnline.exe"),
-            Arguments = $"\"{filePath}\"",
+            FileName = Path.Combine(appPath, "ForeverOnline.exe"),
+            Arguments = $"\"{appPath}\"",
             UseShellExecute = true
         }
     };
