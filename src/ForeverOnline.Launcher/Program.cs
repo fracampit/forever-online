@@ -1,19 +1,12 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using ForeverOnline.Launcher.Models;
 
-const string token = "Z2hwX2xUa2R0MHJTeDlqQkt4cU5lQ0c2MHZ3Q0RwY3FmNjBvWDQ2VA==";
-
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add("User-Agent", "request");
-client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-    "Token", 
-    Encoding.UTF8.GetString(Convert.FromBase64String(token)));
 
 var currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 if (currentPath == null) throw new DirectoryNotFoundException("Failed to get current path.");
