@@ -50,12 +50,6 @@ async Task<Release> GetLatestRelease()
     return release ?? throw new WebException($"Failed to get latest release: {response.ReasonPhrase}");
 }
 
-static string GetCurrentVersion()
-{
-    // Implement your logic to get the current version of your app
-    return "v1.0.0";
-}
-
 async Task DownloadLatestRelease(string assetsUrl)
 {
     var response = await client.GetAsync(assetsUrl);
@@ -134,4 +128,21 @@ void RunApp()
     };
     Console.WriteLine($"Starting {process.StartInfo.FileName}...");
     process.Start();
+}
+
+string GetCurrentVersion()
+{
+    var process = new Process
+    {
+        StartInfo = new ProcessStartInfo
+        {
+            FileName = Path.Combine(appPath, "ForeverOnline.exe"),
+            Arguments = $"\"{appPath}\"",
+            UseShellExecute = true
+        }
+    };
+    
+    // get file version from process
+    var fileVersionInfo = FileVersionInfo.GetVersionInfo(process.StartInfo.FileName);
+    return fileVersionInfo.FileVersion ?? throw new FileLoadException("Failed to get current version.");
 }
