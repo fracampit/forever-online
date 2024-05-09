@@ -25,7 +25,16 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish --configuration Release --no-build --output ./publish
+      run: |
+        dotnet publish --configuration Release --no-build --output ./publish/ForeverOnline
+        dotnet publish --configuration Release --no-build --output ./publish/ForeverOnline.Launcher
+
+    - name: Zip files
+      run: |
+        mkdir publish/ForeverOnline/bin
+        mv publish/ForeverOnline/* publish/ForeverOnline/bin
+        mv publish/ForeverOnline.Launcher/* publish/ForeverOnline
+        zip -r ForeverOnline.zip publish/ForeverOnline
 
     - name: Create Release
       id: create_release
@@ -45,6 +54,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./publish/ForeverOnline.dll
-        asset_name: ForeverOnline.dll
-        asset_content_type: application/octet-stream
+        asset_path: ./ForeverOnline.zip
+        asset_name: ForeverOnline.zip
+        asset_content_type: application/zip
