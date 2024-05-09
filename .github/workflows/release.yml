@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore /p:PublishReadyToRun=true
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore /p:PublishReadyToRun=true
 
     - name: Publish
       run: |
