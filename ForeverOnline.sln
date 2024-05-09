@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverOnline", "src\ForeverOnline\ForeverOnline.csproj", "{3C25740A-A2A7-4460-8851-22AAE53FA88E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForeverOnline.Launcher", "src\ForeverOnline.Launcher\ForeverOnline.Launcher.csproj", "{2DF9F433-396B-40E1-AB45-2B0660F28C1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{3C25740A-A2A7-4460-8851-22AAE53FA88E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C25740A-A2A7-4460-8851-22AAE53FA88E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C25740A-A2A7-4460-8851-22AAE53FA88E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DF9F433-396B-40E1-AB45-2B0660F28C1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DF9F433-396B-40E1-AB45-2B0660F28C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DF9F433-396B-40E1-AB45-2B0660F28C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DF9F433-396B-40E1-AB45-2B0660F28C1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
